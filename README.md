@@ -107,3 +107,50 @@ The server exposes the following API endpoints (GET or POST):
 ---
 
 Learn more about the 402 payment protocol at [x402.org](https://www.x402.org/).
+
+
+## Running with Docker
+
+You can run this project in a containerized environment using Docker and Docker Compose. This setup ensures all dependencies and environment variables are managed consistently.
+
+### Requirements
+- **Docker** and **Docker Compose** installed on your system.
+- The project uses **Node.js v22.13.1-slim** as specified in the Dockerfile.
+
+### Environment Variables
+Before building the container, ensure you have a `.env` file in the project root with the following variables:
+
+```env
+WALLET_ADDRESS=your_wallet_address_here
+OPENAI_API_KEY=your_openai_api_key_here
+CDP_API_KEY_ID=your_cdp_api_key_id_here
+CDP_API_KEY_SECRET=your_cdp_api_key_secret_here
+# (Optional, for testBuy.js)
+PRIVATE_KEY=0xPrivateKeyHere
+# (Optional, for TEE deployments to Phala Cloud)
+DSTACK_SECRET_SALT=secret_salt
+```
+
+You can use the provided `.env.example` as a template.
+
+### Build and Run
+1. **Build and start the service:**
+
+   ```bash
+   npx phala simulator run
+   docker compose up --build
+   ```
+
+   This will build the Docker image and start the `javascript-app` service.
+
+2. **Access the API:**
+   - The server will be available at `http://localhost:4021`.
+   - Port **4021** is exposed and mapped from the container to your host.
+
+### Notes
+- The container runs as a non-root user for security.
+- No additional services (databases, caches) are required.
+- If you want to test the buy functionality (`testBuy.js`), ensure `PRIVATE_KEY` is set in your `.env` file.
+- The app uses OpenAI and Coinbase APIs over the internet; no local containers are needed for these services.
+
+---

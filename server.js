@@ -4,6 +4,7 @@ import { facilitator } from "@coinbase/x402";
 import dotenv from "dotenv";
 import path from "path";
 import OpenAI from "openai";
+import { runTestBuy, getTestAccountPublicKey } from "./testBuy.js";
 
 dotenv.config();
 
@@ -25,27 +26,27 @@ app.use(
       // Route configurations for protected endpoints
       "POST /text-to-image": {
         price: "$0.25",
-        network: "base",
+        network: "base-sepolia",
       },
       "GET /text-to-image": {
         price: "$0.25",
-        network: "base",
+        network: "base-sepolia",
       },
       "POST /word-count": {
         price: "$0.01",
-        network: "base",
+        network: "base-sepolia",
       },
       "GET /word-count": {
         price: "$0.01",
-        network: "base",
+        network: "base-sepolia",
       },
       "POST /sentiment-analysis": {
         price: "$0.05",
-        network: "base",
+        network: "base-sepolia",
       },
       "GET /sentiment-analysis": {
         price: "$0.05",
-        network: "base",
+        network: "base-sepolia",
       },
     },
     facilitator
@@ -195,6 +196,39 @@ function sentimentAnalysisHandler(req, res) {
 app.post("/sentiment-analysis", sentimentAnalysisHandler);
 app.get("/sentiment-analysis", sentimentAnalysisHandler);
 
+// Add an endpoint to trigger the testBuy logic
+app.get("/test-buy", async (_req, res) => {
+  try {
+    // Call the test buy function and return its result
+    const result = await runTestBuy();
+    res.send({ success: true, result });
+  } catch (error) {
+    // Return error details for debugging
+    res.status(500).send({
+      success: false,
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});
+
+// Add an endpoint to get the public key (address) of the test account
+app.get("/test-account-address", async (_req, res) => {
+  try {
+    // Call the function to get the address
+    const address = await getTestAccountPublicKey();
+    console.log("Test account address:", address);
+    res.send({ success: true, address });
+  } catch (error) {
+    // Return error details for debugging
+    res.status(500).send({
+      success: false,
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});
+
 // Serve the home page
 app.get("/", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "index.html"));
@@ -204,9 +238,7 @@ app.get("/", (req, res) => {
 export default app;
 
 // Add this block to run the server locally
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 4021;
-  app.listen(PORT, () => {
-    console.log(`Server listening at http://localhost:${PORT}`);
-  });
-}
+const PORT = process.env.PORT || 4021;
+app.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}`);
+});

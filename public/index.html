@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>402 API</title>
+    <title>x402 API in TEE</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -22,7 +22,7 @@
         }
 
         h1 {
-            color: #2563eb;
+            color: #cdfa50;
         }
 
         pre {
@@ -52,12 +52,13 @@
         }
 
         a {
-            color: #2563eb;
+            color: #cdfa50;
             text-decoration: none;
         }
 
         a:hover {
             text-decoration: underline;
+            color: #b2e03b; /* slightly darker green for hover */
         }
 
         .collapsible-trigger {
@@ -74,7 +75,7 @@
         }
 
         .cost-badge {
-            background: #2563eb;
+            background: #cdfa50;
             color: #fff;
             border-radius: 12px;
             padding: 2px 10px;
@@ -174,25 +175,27 @@
     </header>
 
     <div class="card">
-        <h3 class="collapsible-trigger">Quickstart (Requires a wallet with Base USDC)</h3>
+        <h3 class="collapsible-trigger">Quickstart (Phala Cloud Deployment to generate a wallet for Base)</h3>
         <div class="collapsible-content">
             <p><strong>Step 1:</strong> Install required dependencies</p>
-            <pre><code>npm install viem x402-fetch dotenv</code></pre>
+            <pre><code>npm install viem x402-fetch dotenv @phala/dstack-sdk</code></pre>
 
             <p><strong>Step 2:</strong> Use the following code to make API calls</p>
             <pre><code>import { privateKeyToAccount } from "viem/accounts";
 import { wrapFetchWithPayment, decodeXPaymentResponse } from "x402-fetch";
+import { TappdClient } from "@phala/dstack-sdk";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// Set your private key in .env file
-const account = privateKeyToAccount(process.env.PRIVATE_KEY);
+// Set your secret salt in .env file
+const client = new TappdClient();
+const account = await client.deriveKey(process.env.DSTACK_SECRET_SALT);
 // Set max payment amount to 1 USDC
 const fetchWithPayment = wrapFetchWithPayment(fetch, account, 1);
 
 // Example API call
-const url = "http://402api.com/text-to-image?prompt=a%20blue%20ball";
+const url = "https://x402.incipient.ltd/text-to-image?prompt=a%20blue%20ball";
 
 fetchWithPayment(url, {
   method: "GET",
@@ -299,10 +302,49 @@ fetchWithPayment(url, {
         </div>
     </div>
 
+    <div class="card">
+        <h3 class="collapsible-trigger">Test Buy API (Base Sepolia)</h3>
+        <div class="collapsible-content">
+            <p><strong>Description:</strong> These endpoints let you test the payment flow on Base Sepolia. <br>
+            <span style="color: #b91c1c; font-weight: bold;">You must send test ETH on Base Sepolia to the public key before using the test buy endpoint.</span></p>
+
+            <ul>
+                <li><code>/test-account-address</code> (GET): Returns the public key (address) of the test account. <br>
+                    <strong>Example Return:</strong>
+                    <pre><code>{
+  "success": true,
+  "address": "0x..."
+}</code></pre>
+                    <div class="test-area-container">
+                        <h4>Try it out:</h4>
+                        <button class="test-endpoint-button" data-route="/test-account-address" data-param-ids='{}'>Test Endpoint</button>
+                    </div>
+                </li>
+                <li><code>/test-buy</code> (GET): Attempts a paid API call using the test account. <br>
+                    <strong>Example Return:</strong>
+                    <pre><code>{
+  "success": true,
+  "result": {
+    "body": { /* ... */ },
+    "paymentResponse": { /* ... */ }
+  }
+}</code></pre>
+                    <div class="test-area-container">
+                        <h4>Try it out:</h4>
+                        <button class="test-endpoint-button" data-route="/test-buy" data-param-ids='{}'>Test Endpoint</button>
+                    </div>
+                </li>
+            </ul>
+            <p style="margin-top: 1em; color: #64748b; font-size: 0.95em;">
+                <strong>Note:</strong> You can get test ETH for Base Sepolia from a <a href="https://sepoliafaucet.com/" target="_blank">faucet</a>.<br>
+                Make sure to send it to the address returned by <code>/test-account-address</code>.
+            </p>
+        </div>
+    </div>
 
     <div class="footer">
-        Made by <a href="https://x.com/darianbailey14" target="_blank">darianb</a> |
-        <a href="https://github.com/Dsinghbailey/402-api" target="_blank">GitHub Repository</a>
+        Made by <a href="https://x.com/darianbailey14" target="_blank">darianb</a> | Edited by <a href="https://x.com/hashwarlock" target="_blank">hashwarlock</a> |
+        <a href="https://github.com/HashWarlock/402-api-test" target="_blank">GitHub Repository</a>
     </div>
 
     <script>
@@ -317,7 +359,7 @@ fetchWithPayment(url, {
             });
 
             const testButtons = document.querySelectorAll('.test-endpoint-button');
-            const baseUrl = "http://402api.com"; // Base URL for the API
+            const baseUrl = "http://x402.incipient.ltd"; // Base URL for the API
 
             testButtons.forEach(button => {
                 button.addEventListener('click', function () {
@@ -338,7 +380,7 @@ fetchWithPayment(url, {
                         }
                     }
 
-                    const testUrl = `${baseUrl}${route}?${params.toString()}`;
+                    const testUrl = `${baseUrl}${route}${(params.toString() ? `?${params.toString()}` : '' )}`;
                     window.open(testUrl, '_blank');
                 });
             });
