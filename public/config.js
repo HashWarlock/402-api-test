@@ -1,5 +1,5 @@
 // --- Configuration ---
-const API_BASE_URL = "http://402api.com"; // Replace with your API base URL
+const API_BASE_URL = "https://x402.incipient.ltd"; // Replace with your API base URL
 
 // --- Data for API Endpoints ---
 const apiEndpoints = [
@@ -64,6 +64,29 @@ const apiEndpoints = [
         "positive": 3,
         "negative": 0
     }
+}`,
+  },
+  {
+    id: "test-account-address",
+    path: "/test-account-address",
+    cost: "$0.00",
+    description: "Returns the address of the test account to send test Base Sepolia ETH to.",
+    exampleReturn: `{
+  "success": true,
+  "address": "0x..."
+}`,
+  },
+  {
+    id: "test-buy",
+    path: "/test-buy",
+    cost: "$0.00",
+    description: "Performs a test buy of 0.25 USDC for the API Call text-to-image to generate a red ball.",
+    exampleReturn: `{
+  "success": true,
+  "result": {
+    "body": { /* ... */ },
+    "paymentResponse": { /* ... */ }
+  }
 }`,
   },
 ];

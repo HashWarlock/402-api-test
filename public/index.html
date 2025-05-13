@@ -5,49 +5,54 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-	<title>402 API</title>
+	<title>x402 API in TEE</title>
 	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 	<header>
-		<h1>402 API</h1>
+		<h1>x402 API in TEE</h1>
 		<p>A collection of demo API tools using the <a href="https://www.x402.org/" target="_blank">x402
 				payment</a> protocol.</p>
 	</header>
 
 	<div class="card">
-		<h3 class="collapsible-trigger">Quickstart</h3>
+		<h3 class="collapsible-trigger">Quickstart (Phala Cloud Deployment to generate a wallet for Base)</h3>
 		<div class="collapsible-content">
 			<p><strong>Step 0 :</strong> <a href="https://faucet.circle.com/" target="_blank">Get Base
 					Sepolia USDC</a> (Make sure to select Base Sepolia in the network dropdown)</p>
 			<p><strong>Step 1:</strong> Install required dependencies</p>
-			<div style="position: relative;">
-				<button class="copy-btn" data-copy-target="quickstart-install"
-					title="Copy to clipboard">Copy</button>
-				<pre><code id="quickstart-install">npm install viem x402-fetch dotenv</code></pre>
-			</div>
-			<p><strong>Step 2:</strong> Use the following code to make API calls</p>
-			<div style="position: relative;">
-				<button class="copy-btn" data-copy-target="quickstart-code"
-					title="Copy to clipboard">Copy</button>
-				<pre><code id="quickstart-code">import { privateKeyToAccount } from "viem/accounts";
-import { wrapFetchWithPayment } from "x402-fetch";
+            <pre><code>npm install viem x402-fetch dotenv @phala/dstack-sdk</code></pre>
+
+            <p><strong>Step 2:</strong> Use the following code to make API calls</p>
+            <pre><code>import { privateKeyToAccount } from "viem/accounts";
+import { wrapFetchWithPayment, decodeXPaymentResponse } from "x402-fetch";
+import { TappdClient } from "@phala/dstack-sdk";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const account = privateKeyToAccount(process.env.PRIVATE_KEY);
-const fetchWithPayment = wrapFetchWithPayment(fetch, account, BigInt(0.1 * 10 ** 7));
+// Set your secret salt in .env file
+const client = new TappdClient();
+const account = await client.deriveKey(process.env.DSTACK_SECRET_SALT);
+// Set max payment amount to 1 USDC
+const fetchWithPayment = wrapFetchWithPayment(fetch, account, 1);
 
-const url = "https://402api.com/word-count?text=hello%20world"; // Example GET
-fetchWithPayment(url, { method: "GET" }) // x402-fetch still needs method specified
-    .then(async (response) => { const body = await response.json(); console.log(body); })
-    .catch((error) => { console.error(error); });
-</code></pre>
-			</div>
-		</div>
-	</div>
+// Example API call
+const url = "https://x402.incipient.ltd/text-to-image?prompt=a%20blue%20ball";
+
+fetchWithPayment(url, {
+  method: "GET",
+})
+  .then(async (response) => {
+    const body = await response.json();
+    console.log(body);
+  })
+  .catch((error) => {
+    console.error(error.response?.data?.error);
+  });</code></pre>
+        </div>
+    </div>
 
 	<div>
 		<h2>Available API Endpoints (GET or POST)</h2>
@@ -81,9 +86,9 @@ fetchWithPayment(url, { method: "GET" }) // x402-fetch still needs method specif
 	</template>
 
 	<div class="footer">
-		Made by <a href="https://x.com/darianbailey14" target="_blank">darianb</a> |
-		<a href="https://github.com/Dsinghbailey/402-api" target="_blank">GitHub Repository</a>
-	</div>
+        Made by <a href="https://x.com/darianbailey14" target="_blank">darianb</a> | Edited by <a href="https://x.com/hashwarlock" target="_blank">hashwarlock</a> |
+        <a href="https://github.com/HashWarlock/402-api-test" target="_blank">GitHub Repository</a>
+    </div>
 
 	<script src="config.js"></script>
 	<script src="main.js"></script>

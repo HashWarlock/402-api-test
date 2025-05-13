@@ -7,6 +7,8 @@ body {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  /* Background tint for freshness */
+  background-color: #f6ffe5; /* very light green tint */
 }
 
 header {
@@ -15,7 +17,7 @@ header {
 }
 
 h1 {
-  color: #2563eb;
+  color: #cdfa50; /* base accent color */
 }
 
 pre {
@@ -35,7 +37,9 @@ code {
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* Subtle green shadow for accent */
+  box-shadow: 0 2px 4px rgba(205, 250, 80, 0.10);
+  background: #fff;
 }
 
 .footer {
@@ -46,12 +50,13 @@ code {
 }
 
 a {
-  color: #2563eb;
+  color: #cdfa50; /* base accent color */
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
+  color: #b2e03e; /* darker green for hover */
 }
 
 .collapsible-trigger {
@@ -68,8 +73,8 @@ a:hover {
 }
 
 .cost-badge {
-  background: #2563eb;
-  color: #fff;
+  background: #cdfa50; /* base accent color */
+  color: #333; /* dark text for contrast */
   border-radius: 12px;
   padding: 2px 10px;
   font-size: 0.95em;
@@ -101,7 +106,7 @@ a:hover {
   margin-top: 25px;
   padding: 15px;
   border-top: 1px solid #e2e8f0;
-  background-color: #f8fafc;
+  background-color: #f6ffe5; /* light green background */
   border-radius: 0 0 8px 8px;
 }
 
@@ -133,26 +138,27 @@ a:hover {
 }
 
 .test-endpoint-button {
-  background-color: #4caf50;
-  color: white;
+  background-color: #cdfa50; /* base accent color */
+  color: #333; /* dark text for contrast */
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.95em;
   margin-top: 5px;
+  transition: background 0.2s;
 }
 
 .test-endpoint-button:hover {
-  background-color: #45a049;
+  background-color: #b2e03e; /* darker green for hover */
 }
 
 .copy-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #2563eb;
-  color: #fff;
+  background: #cdfa50; /* base accent color */
+  color: #333; /* dark text for contrast */
   border: none;
   border-radius: 4px;
   padding: 5px 12px;
@@ -163,5 +169,5 @@ a:hover {
 }
 
 .copy-btn:hover {
-  background: #1d4ed8;
+  background: #b2e03e; /* darker green for hover */
 }

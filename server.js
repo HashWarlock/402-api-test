@@ -9,6 +9,8 @@ import { log } from "./utils/log.js";
 import { textToImageHandler } from "./handlers/textToImageHandler.js";
 import { wordCountHandler } from "./handlers/wordCountHandler.js";
 import { sentimentAnalysisHandler } from "./handlers/sentimentAnalysisHandler.js";
+import { testAccountAddressHandler } from "./handlers/testBuyHandler.js";
+import { testBuyHandler } from "./handlers/testBuyHandler.js";
 
 dotenv.config();
 
@@ -84,6 +86,9 @@ app.get("/word-count", wordCountHandler);
 
 app.post("/sentiment-analysis", sentimentAnalysisHandler);
 app.get("/sentiment-analysis", sentimentAnalysisHandler);
+
+app.get("/test-account-address", testAccountAddressHandler);
+app.get("/test-buy", testBuyHandler);
 
 // Serve the home page
 app.get("/", (req, res) => {
