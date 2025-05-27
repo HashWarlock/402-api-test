@@ -7,32 +7,10 @@ services:
       - DSTACK_SECRET_SALT=${DSTACK_SECRET_SALT}
       - WALLET_ADDRESS=${WALLET_ADDRESS}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-    volumes:
-      - /var/run/tappd.sock:/var/run/tappd.sock
-    networks:
-      - x402-network
-
-  dstack-ingress:
-    image: kvin/dstack-ingress@sha256:2cc3bc50d71faa4d313084237b0f5d1d25963024f2484c7a6414aed075883cdd
     ports:
-      - "443:443"
-    environment:
-      - DOMAIN=${DOMAIN}
-      - GATEWAY_DOMAIN=${GATEWAY_DOMAIN}
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
-      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
-      - SET_CAA=true
-      - TARGET_ENDPOINT=http://x402-app:4021
+      - "4021:4021"
     volumes:
       - /var/run/tappd.sock:/var/run/tappd.sock
-      - cert-data:/etc/letsencrypt
-    restart: unless-stopped
     networks:
       - x402-network
 
-networks:
-  x402-network:
-    driver: bridge
-
-volumes:
-  cert-data:
