@@ -134,14 +134,17 @@ This project supports deployment in a Trusted Execution Environment (TEE), as de
 - **`server.js`**: Main server file that sets up Express and routes.
 - **`testBuy.js`**: Script for testing the X402 payment protocol integration.
 
-## Setup and Run Server
+## Setup and Deploy on Phala Cloud
 
-1. **Install Dependencies**:
+1. **Build Docker Image and Publish to DockerHub**:
 
    ```bash
-   npm install
-   # or
-   yarn install
+   # Make sure to log into docker and run docker desktop
+   
+   # Build docker image
+   npx phala docker build
+   # Publish docker image
+   npx phala docker push
    ```
 
 2. **Environment Variables**:
@@ -154,22 +157,23 @@ This project supports deployment in a Trusted Execution Environment (TEE), as de
    # OpenAI API key for DALL-E image generation
    OPENAI_API_KEY=your_openai_api_key_here
 
-   # CDP API key ID
-   CDP_API_KEY_ID=your_cdp_api_key_id_here
-
-   # CDP API key secret
-   CDP_API_KEY_SECRET=your_cdp_api_key_secret_here
+   # Secret salt to generate a key from in TEE
+   DSTACK_SECRET_SALT=secret_salt
    ```
 
-3. **Start the Server**:
+3. **Deploy to Phala Cloud**:
 
    ```bash
-   node server.js
+   # Make sure to set your API key to access Phala Cloud
+   # Replace the image in the docker-compose.yaml file with published image
+   
+   # Deploy CVM to Phala Cloud
+   npx phala cvms create -n x402-app -c docker-compose.yaml -e .env
    ```
+   
+   The output should provide you a URL to access your CVM in the Phala Cloud Dashboard.
 
-   The server will start on `http://localhost:4021`.
-
-## Test Buy
+## Test Buy Locally
 
 1. **Install Dependencies** (if not already done):
 
@@ -196,6 +200,9 @@ This project supports deployment in a Trusted Execution Environment (TEE), as de
 3. **Test Buy**:
 
    ```bash
+   # Run a local TEE simulator
+   npx phala simulator start
+   # Run testbuy with the generate key from the simulator
    node testBuy.js
    ```
 
@@ -206,6 +213,7 @@ This project supports deployment in a Trusted Execution Environment (TEE), as de
 - `@coinbase/x402`: Facilitator for X402 protocol.
 - `dotenv`: Loads environment variables from a `.env` file.
 - `openai`: OpenAI Node.js library for accessing the DALL-E API.
+- `@phala/dstack-sdk`: Dstack SDK for TEE functions like generating keys in TEE.
 
 ---
 
