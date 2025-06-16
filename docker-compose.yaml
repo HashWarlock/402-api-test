@@ -11,6 +11,4 @@ services:
       - "4021:4021"
     volumes:
       - /var/run/tappd.sock:/var/run/tappd.sock
-    networks:
-      - x402-network
 
